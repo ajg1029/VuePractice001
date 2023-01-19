@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="myCalendar">
 		<div style="display:none">
 			<div>{{ test1 }}</div>
 			<div>{{ test2 }}</div>
@@ -13,6 +13,10 @@
 
 		<section class="sectionCalendar">
 			<div>현재 날짜 : {{ currentYear }}년 {{ currentMonth + 1 }}월 {{ currentDate }}일 {{ currentDay }}</div>
+			<!-- <div>선택 날짜 : {{ selectedYear }}년 {{ selectedMonth + 1 }}월 {{ selectedDate }}일 {{ selectedDay }}</div> -->
+			<div>{{ selectedRootDate.getFullYear() }}년</div>
+			<div>{{ selectedRootDate.getMonth() + 1}}월</div>
+			<div>{{ selectedRootDate.getDate() }}일</div>
 			<hr />
 
 			<div>
@@ -33,8 +37,14 @@
 
 			<h4>현재 날짜 : {{ currentYear }}년 {{ currentMonth + 1 }}월 {{ currentDate }}일 {{ dayKor(parseInt(currentDay)) }}요일</h4>
 			<br />
-			<button v-text="'<'" @click="displayPrevMonth"></button>
-			<button v-text="'>'" @click="displayNextMonth"></button>
+			<div>
+				<button @click="selectedRootDatePrev">-</button>
+				<button @click="selectedRootDateNext">+</button>
+			</div>
+			<div>
+				<button v-text="'<'" @click="displayPrevMonth"></button>
+				<button v-text="'>'" @click="displayNextMonth"></button>
+			</div>
 			<br />
 			<br />
 			<table>
@@ -95,22 +105,25 @@ export default {
 	},
 	created() {
 		// 선택한 날짜의 기본값 : 현재 날짜
-		this.selectedRootDate = this.currentRootDate
+		this.selectedRootDate = new Date()
 		// 선택한 날짜가 포함된 달의 달력을 표시
 		// this.getDisplayedWeeks(this.selectedDate)
 		// this.getWeekDays()
+		// console.log(this.selectedRootDate)
 	},
 	watch: {
-		currentRootDate() {
-			this.getDisplayedWeeks(this.selectedRootDate)
+		selectedRootDate(val) {
+			this.getDisplayedWeeks(val)
 			this.getWeekDays()
 		}
 	},
 	methods: {
 		testMethod() {
 			// console.log(this.getFirstDateOfMonth(this.currentRootDate).getDay())
+			// console.log(this.selectedRootDate)
 			this.getDisplayedWeeks(this.selectedRootDate)
 			this.getWeekDays()
+		
 		},
 		// 선택한 날짜의 연, 월, 일, 요일을 반환하는 메서드
 		yearSelect() {this.selectedYear = this.selectedRootDate.getFullYear()},
@@ -141,8 +154,9 @@ export default {
 		getDisplayedWeeks(rootDate) { // 선택 날짜, 한 주의 시작 요일, 한 주의 기준 요일 --> 선택 날짜가 포함된 달의 주(weeks)들
 			let tempWeeks = [] // weeks 에 들어갈 week 들이 저장될 배열
 			for (let dd = 1; dd <= this.getLastDateOfMonth(rootDate).getDate(); dd++) { // 선택 날짜가 포함된 달의 1일부터 말일까지 순회
-
-				let tempDate = rootDate.setDate(dd)
+				// let tempDate = rootDate.setDate(dd)
+				// setDate를 사용하면 원래 값이 변한다....
+				let tempDate = new Date(rootDate.getFullYear(), rootDate.getMonth(), dd)
 				let tempDay = parseInt(dayjs(tempDate).format('d'))
 
 				if (tempDay === this.benchmarkDay ) {
@@ -171,6 +185,7 @@ export default {
 					tempWeeks.push(tempWeek)
 				}
 			}
+			console.log(rootDate)
 			// console.log(tempWeeks)
 			this.weeks = tempWeeks
 		},
@@ -184,17 +199,37 @@ export default {
 				}
 		},
 		displayPrevMonth() {
-			if (!this.weeks.length) {return}
-			this.currentRootDate = new Date(this.currentRootDate.getFullYear(), this.currentRootDate.getMonth() - 1, this.currentRootDate.getDate())
+			// if (!this.weeks.length) {return}
+			let tempPrev = new Date(this.selectedRootDate.getFullYear(), this.selectedRootDate.getMonth() - 1, this.selectedRootDate.getDate())
+			if (tempPrev.getDate() !== this.selectedRootDate.getDate()) {
+				tempPrev = new Date(this.selectedRootDate.getFullYear(), this.selectedRootDate.getMonth(), 0)
+			}
+			this.selectedRootDate = tempPrev
 
 		},
 		displayNextMonth() {
-			if (!this.weeks.length) {return}
-			console.log(this.currentRootDate.getFullYear())
-			console.log(this.currentRootDate.getMonth())
-			console.log(this.currentRootDate.getDate())
-			this.currentRootDate = new Date(this.currentRootDate.getFullYear(), this.currentRootDate.getMonth() + 1, this.currentRootDate.getDate())
-		}
+			// if (!this.weeks.length) {return}
+			let tempNext = new Date(this.selectedRootDate.getFullYear(), this.selectedRootDate.getMonth() + 1, this.selectedRootDate.getDate())
+			if (tempNext.getDate() !== this.selectedRootDate.getDate()) {
+				tempNext = new Date(this.selectedRootDate.getFullYear(), this.selectedRootDate.getMonth() + 2, 0)
+			}
+			this.selectedRootDate = tempNext
+		},
+		selectedRootDatePrev() {
+			let temp = this.selectedRootDate.getDate()
+			// this.selectedRootDate.setDate(temp - 1)
+			this.selectedRootDate = new Date(this.selectedRootDate.getFullYear(), this.selectedRootDate.getMonth(), temp - 1)
+
+		},
+		selectedRootDateNext() {
+			let temp = this.selectedRootDate.getDate()
+			// this.selectedRootDate.setDate(temp + 1)
+			// vue 의 data() 에는 영향을 미치지 못해서, 바인딩이 제대로 안 됨. 아래와 같이 다시 할당을 해줘야...
+			this.selectedRootDate = new Date(this.selectedRootDate.getFullYear(), this.selectedRootDate.getMonth(), temp + 1)
+		},
+
+
+
 
 	},
 	computed: {
@@ -211,6 +246,11 @@ export default {
 <style>
 .test {
 	display: none;
+}
+.myCalendar {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
 
 </style>
