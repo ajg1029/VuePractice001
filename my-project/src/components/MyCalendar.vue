@@ -1,31 +1,46 @@
 <template>
 	<div>
-		<div>{{ test1 }}</div>
-		<div>{{ test2 }}</div>
-		<div>{{ weekdays }}</div>
-		<button @click="testMethod">test btn</button>
-		<div>{{ new Date().getTime() }}</div>
-		<div>{{ new Date().setDate(1) }}</div>
-		<hr />
+		<div style="display:none">
+			<div>{{ test1 }}</div>
+			<div>{{ test2 }}</div>
+			<div>{{ weekdays }}</div>
+			<div>{{ new Date().getTime() }}</div>
+			<div>{{ new Date().setDate(1) }}</div>
+			<hr />
+		</div>
+	
+		<button @click="testMethod">TEST</button>
 
 		<section class="sectionCalendar">
 			<div>현재 날짜 : {{ currentYear }}년 {{ currentMonth + 1 }}월 {{ currentDate }}일 {{ currentDay }}</div>
 			<div>요일 테스트 : {{  }}</div>
+			<hr />
+
+			<div>
+				<div>한 주의 시작 요일</div>
+				<label v-for="option in dayOptions" :key="option.value">
+					<input type="radio" v-model="firstDay" :value="option.value"> {{ option.text }}
+				</label>
+			</div>
+
+			<div>
+				<div>기준 요일 (어떤 달에 포함될 지)</div>
+				<label v-for="option in dayOptions" :key="option.value">
+					<input type="radio" v-model="benchmarkDay" :value="option.value"> {{ option.text }}
+				</label>
+			</div>
+			
 			<table>
 				<thead>
 					<tr>
+						<th></th>
 						<th v-for="(day, idx) in weekdays" :key="idx">{{ day }}</th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td>1</td>
-						<td>2</td>
-						<td>3</td>
-						<td>4</td>
-						<td>5</td>
-						<td>6</td>
-						<td>7</td>
+					<tr v-for="(week, idx) in weeks" :key="idx">
+						<td>week{{ idx + 1 }}</td>
+						<td v-for="(date, idx) in week" :key="idx">{{ date }}</td>
 					</tr>
 				</tbody>
 			</table>
@@ -55,24 +70,34 @@ export default {
 			selectedMonth: null,
 			selectedDate: null,
 			selectedDay: null,
-			weeks: []
+			weeks: [],
+
+			dayOptions: [
+				{ text: '월', value: 1},
+				{ text: '화', value: 2},
+				{ text: '수', value: 3},
+				{ text: '목', value: 4},
+				{ text: '금', value: 5},
+				{ text: '토', value: 6},
+				{ text: '일', value: 0},
+			]
 		}
 	},
 	created() {
 		// 선택한 날짜의 기본값 : 현재 날짜
 		this.selectedRootDate = this.currentRootDate
 
-		// 한 주의 시작 요일을 기준으로 일곱 요일 구성
-		let tempWeekDay = this.firstDay
-		for (let i = 0; i < 7; i++) {
-			this.weekdays.push(this.dayKor(tempWeekDay%7))
-			tempWeekDay++
-		}
+
+		// 선택한 날짜가 포함된 달의 달력을 표시
+		// this.getDisplayedWeeks(this.selectedDate)
+
+
 	},
 	methods: {
 		testMethod() {
 			// console.log(this.getFirstDateOfMonth(this.currentRootDate).getDay())
-			this.getWeeks(new Date())
+			this.getDisplayedWeeks(this.selectedRootDate)
+			this.getWeekDays()
 		},
 		// 선택한 날짜의 연, 월, 일, 요일을 반환하는 메서드
 		yearSelect() {this.selectedYear = this.selectedRootDate.getFullYear()},
@@ -99,21 +124,51 @@ export default {
 		getLastDateOfMonth(date) {return new Date(date.getFullYear(), date.getMonth() + 1, 0)},
 		getFirstDateOfNextMonth(date) {return new Date(date.getFullYear(), date.getMonth() + 1, 1)},
 
-		getWeeks(date) {
-			let tempWeeks = []
-			for (let dd = 1; dd <= this.getLastDateOfMonth(date).getDate(); dd++) {
-				let tempDate = date
-				let tempDay = new Date(date.getFullYear(), date.getMonth(), dd).getDay()
+		// first, benchmark
+		getDisplayedWeeks(rootDate) { // 선택 날짜, 한 주의 시작 요일, 한 주의 기준 요일 --> 선택 날짜가 포함된 달의 주(weeks)들
+			let tempWeeks = [] // weeks 에 들어갈 week 들이 저장될 배열
+			for (let dd = 1; dd <= this.getLastDateOfMonth(rootDate).getDate(); dd++) { // 선택 날짜가 포함된 달의 1일부터 말일까지 순회
+
+				let tempDate = rootDate.setDate(dd)
+				let tempDay = parseInt(dayjs(tempDate).format('d'))
+
 				if (tempDay === this.benchmarkDay ) {
-					let tempWeek = []
-					for (let day = tempDay; (day+7)%7 !== this.firstDay; day--){
-						tempWeek.unshift(tempDate)
-						tempDate.setDate
+					// console.log(this.dayKor(tempDay))
+					let tempWeek = [new Date(rootDate.getFullYear(), rootDate.getMonth(), dd).getDate()]
+					let ddLeft = dd
+					let ddRight = dd
+
+					for (let day = tempDay; (day+7)%7 !== (this.firstDay+7)%7; day--) {
+						ddLeft--
+						tempWeek.unshift(new Date(rootDate.getFullYear(), rootDate.getMonth(), ddLeft).getDate())
 					}
+					for (let day = tempDay; (day+7)%7 !== (this.firstDay+7-1)%7; day++) {
+						ddRight++
+						tempWeek.push(new Date(rootDate.getFullYear(), rootDate.getMonth(), ddRight).getDate())
+					}
+					
+					// for (let day = tempDay; (day+7+1)%7 !== (this.firstDay+7)%7; day--) {
+					// 	tempWeek.unshift(dayjs(rootDate.setDate(ddLeft)).format('YYYY-MM-DD'))
+					// 	ddLeft--
+					// }
+					// for (let day = tempDay; (day+7)%7+1 !== (this.firstDay+7)%7; day++ ) {
+					// 	tempWeek.push(dayjs(rootDate.setDate(ddFiveSixSeven)).format('YYYY-MM-DD'))
+					// 	ddFiveSixSeven++
+					// }
 					tempWeeks.push(tempWeek)
 				}
 			}
-			console.log(tempWeeks)
+			// console.log(tempWeeks)
+			this.weeks = tempWeeks
+		},
+		getWeekDays() {
+			// 한 주의 시작 요일을 기준으로 일곱 요일 구성
+			this.weekdays = []
+			let tempWeekDay = this.firstDay
+				for (let i = 0; i < 7; i++) {
+					this.weekdays.push(this.dayKor(tempWeekDay%7))
+					tempWeekDay++
+				}
 		}
 	},
 	computed: {
