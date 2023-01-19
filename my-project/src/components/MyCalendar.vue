@@ -13,7 +13,6 @@
 
 		<section class="sectionCalendar">
 			<div>현재 날짜 : {{ currentYear }}년 {{ currentMonth + 1 }}월 {{ currentDate }}일 {{ currentDay }}</div>
-			<div>요일 테스트 : {{  }}</div>
 			<hr />
 
 			<div>
@@ -29,7 +28,15 @@
 					<input type="radio" v-model="benchmarkDay" :value="option.value"> {{ option.text }}
 				</label>
 			</div>
-			
+
+			<hr />
+
+			<h4>현재 날짜 : {{ currentYear }}년 {{ currentMonth + 1 }}월 {{ currentDate }}일 {{ dayKor(parseInt(currentDay)) }}요일</h4>
+			<br />
+			<button v-text="'<'" @click="displayPrevMonth"></button>
+			<button v-text="'>'" @click="displayNextMonth"></button>
+			<br />
+			<br />
 			<table>
 				<thead>
 					<tr>
@@ -39,7 +46,10 @@
 				</thead>
 				<tbody>
 					<tr v-for="(week, idx) in weeks" :key="idx">
-						<td>week{{ idx + 1 }}</td>
+						<td>
+							<!-- <div>year0000 week0</div> -->
+							<div>{{ currentMonth + 1 }}월 / week{{ idx + 1 }}</div>
+						</td>
 						<td v-for="(date, idx) in week" :key="idx">{{ date }}</td>
 					</tr>
 				</tbody>
@@ -86,12 +96,15 @@ export default {
 	created() {
 		// 선택한 날짜의 기본값 : 현재 날짜
 		this.selectedRootDate = this.currentRootDate
-
-
 		// 선택한 날짜가 포함된 달의 달력을 표시
 		// this.getDisplayedWeeks(this.selectedDate)
-
-
+		// this.getWeekDays()
+	},
+	watch: {
+		currentRootDate() {
+			this.getDisplayedWeeks(this.selectedRootDate)
+			this.getWeekDays()
+		}
 	},
 	methods: {
 		testMethod() {
@@ -169,7 +182,20 @@ export default {
 					this.weekdays.push(this.dayKor(tempWeekDay%7))
 					tempWeekDay++
 				}
+		},
+		displayPrevMonth() {
+			if (!this.weeks.length) {return}
+			this.currentRootDate = new Date(this.currentRootDate.getFullYear(), this.currentRootDate.getMonth() - 1, this.currentRootDate.getDate())
+
+		},
+		displayNextMonth() {
+			if (!this.weeks.length) {return}
+			console.log(this.currentRootDate.getFullYear())
+			console.log(this.currentRootDate.getMonth())
+			console.log(this.currentRootDate.getDate())
+			this.currentRootDate = new Date(this.currentRootDate.getFullYear(), this.currentRootDate.getMonth() + 1, this.currentRootDate.getDate())
 		}
+
 	},
 	computed: {
 		currentYear() {return this.currentRootDate.getFullYear()},
