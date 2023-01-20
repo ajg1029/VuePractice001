@@ -4,6 +4,70 @@
 
 ## 2023-01-21
 
+#### (4)
+
+vue 연습하려고 만들었는데 어쩌다보니 calendar project가 되어버린...
+
+#### (3)
+
+일단 메모 기능은 빼고
+
+달력 표시, 주간 넘버링
+
+일 넘기기, 달 넘기기, 연 넘기기
+
+(달력에 표시된) 날짜 클릭 시 이동
+
+
+
+#### (2)
+
+1. 캘린더 스타일 설정
+   
+   * firstDay 선택 (6, 0, 1)
+   
+   * weekArrangeType 선택 (+0, +3)
+
+2* week 번호 방식 설정
+   
+   * weekNumberingType (month, year)
+
+3. targetDatetime 에 default 값 할당 (currentDatetime)
+
+4. targetDatetime으로부터 firstDay 에 해당하는 날짜가 나올 때까지 왼쪽으로 한 칸씩 이동하면서 검증
+
+5. firstDay 나오면 weekArrangeType에 따라서 다시 오른쪽으로 이동
+
+6. 도착한 날짜가 drawingDatetime이 되고, 요일이 benchmarkDay가 된다.
+
+7. drawingDatetime과 benchmarkDay를 기준으로 calendar를 그리고 month와 week를 numbering 한다.
+
+8. weekNumberingType이 year인 경우, 한 해의 첫 번째 benchmarkDay를 확인하여 week를 numbering한다.
+
+
+
+* 네 가지 타입의 데이터가 있다. date memo, week memo, month memo, year memo
+
+* date memo
+  
+  * meta - 'YYYY-MM-DD', 'Date()'
+  
+  * 일간 메모, 캘린더 스타일을 변경해도 그대로 보임
+
+* week memo
+  
+  * meta -firstDay, weekArrangeType, year, month, monthWeek, yearWeek
+  
+  * 주간 메모, 캘린더 스타일이 변경되면 보이지 않음
+  
+  * week 번호 방식이 바뀌는 건 상관 없음. 넘버링이 다르게 보일 뿐
+
+* month memo, year memo
+  
+  * 이 두 개도 캘린더 스타일의 영향을 받는 걸로 하자.
+
+
+
 #### (1)
 
 * ver.3 작업 중...
