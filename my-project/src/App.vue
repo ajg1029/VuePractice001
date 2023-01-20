@@ -1,17 +1,22 @@
 <template>
   <div id="app">
-    <MyCalendar />
+    
+    <MyCalendarV2 />
+    
+    <MyCalendar v-if="false"/>
   </div>
 </template>
 
 <script>
 import MyCalendar from './components/MyCalendar.vue';
+import MyCalendarV2 from './components/MyCalendarV2.vue';
 
 export default {
   name: 'App',
   components: {
-    MyCalendar
-  }
+    MyCalendar,
+    MyCalendarV2
+}
 }
 </script>
 
