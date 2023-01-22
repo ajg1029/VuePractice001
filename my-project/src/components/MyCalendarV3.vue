@@ -163,10 +163,11 @@ export default {
                 }
             }
             console.log(tempWeeks)
+            this.calendarWeeks = tempWeeks
     
         },
         testMethod() {
-            this.setCalendarWeeks(this.targetDate)
+            this.setCalendarWeeks(this.targetDatetime)
         }
     }
 }

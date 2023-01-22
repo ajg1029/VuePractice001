@@ -28,7 +28,7 @@ vue 연습하려고 만들었는데 어쩌다보니 calendar project가 되어�
    
    * weekArrangeType 선택 (+0, +3)
 
-2* week 번호 방식 설정
+2. week 번호 방식 설정
    
    * weekNumberingType (month, year)
 
@@ -36,7 +36,7 @@ vue 연습하려고 만들었는데 어쩌다보니 calendar project가 되어�
 
 4. targetDatetime으로부터 firstDay 에 해당하는 날짜가 나올 때까지 왼쪽으로 한 칸씩 이동하면서 검증
 
-5. firstDay 나오면 weekArrangeType에 따라서 다시 오른쪽으로 이동
+5. firstDay 나오면 weekArrangeType에 따라서 다시 오른쪽으로 이동
 
 6. 도착한 날짜가 drawingDatetime이 되고, 요일이 benchmarkDay가 된다.
 
