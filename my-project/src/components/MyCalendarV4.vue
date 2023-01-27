@@ -49,7 +49,7 @@ export default {
             resaMonth: null, // targetDatetime 기준의 월이 아닌, resa 기준의 월
             resaYear: null, // 마찬가지로 resa 기준 연도
             resaCalendar: null, // resa 달력의 각 날짜가 들어간 배열
-            isDateIncluded: true, // targetDatetime 이 바뀌었을 때 resaMonth 를 벗어나면 false
+            isDateIncluded: null, // targetDatetime 이 바뀌었을 때 resaMonth 를 벗어나면 false
 
         }
     },
@@ -59,22 +59,23 @@ export default {
         this.weekArrangeType = +3
         this.weekNumberingType = 'mw'
         this.targetDatetime = new Date(this.currentDatetime.getFullYear(), this.currentDatetime.getMonth(), this.currentDatetime.getDate())
+        // this.isDateIncluded = false
     },
     watch: {
         targetDatetime(val) {
             this.resaDate = dayjs(val).format('YYYY-MM-DD')
-
             // iresaiDate: null, // YYYY-MM-DD 포맷 문자열 업데이트
             // iresaiMWeek: null, // 주-월넘버링
             // iresaiYWeek: null, // 주-연넘버링
             // iresaiMonth: null, // 달력 월 - 기존과 다르면 isDateIncluded false
             // iresaiYear: null, // 달력 해
             // iresaiCalendar: [], // 달력
-            this.setResaCalendar(val)
+            // this.setResaCalendar(val)
+            this.checkIsDateIncluded()
         },
         isDateIncluded(val) {
             if (val === false) {
-                this.setIresaiCalendar(this.targetDatetime)
+                this.setResaCalendar(this.targetDatetime)
                 this.isDateIncluded = true
             }
         }
@@ -104,13 +105,14 @@ export default {
         setNextDate() {
             this.targetDatetime = new Date(this.targetDatetime.getFullYear(), this.targetDatetime.getMonth(), this.targetDatetime.getDate() + 1)
         },
+        checkIsDateIncluded() {
+            this.setResaCalendar(this.targetDatetime)
+        },
         setResaCalendar(datetime) {
             this.resaDays = []
             this.resaCalendar = []
 
             let benchmarkDay = this.firstDay + this.weekArrangeType
-
-            this.resaCalendar = 
 
             let tempDay = this.firstDay
             for (let i = 0; i < 7; i++) {
@@ -119,21 +121,29 @@ export default {
             }
 
             let tempCalendar = []
-
             // year week numbering 과 month week numbering 부터 세어야 한다...
-            let yearLength = 0
             // target 의 month 에 도달했을 때는 month week numbering을 센다...
-            // for (let i = 0; i < 12; i++) {
-            //     if (i === datetime.getMonth()) {
-            //         for (let j = 0; j < new Date(datetime.getFullYear(), i + 1, 0).getDate(); j++) {
-                        
-            //         }
-            //     } else {
-            //         for (let j = 0; j < new Date(datetime.getFullYear(), i + 1, 0).getDate(); j++) {
-                        
-            //         }
-            //     }
-            // }
+            let tempYW = 0
+            for (let i = 0; i < 12; i++) {
+                let tempMW = 0
+                for (let j = 0; j < new Date(datetime.getFullYear(), i + 1, 0).getDate(); j++) {
+                        if (new Date(datetime.getFullYear(), i, j).getDay() === benchmarkDay) {
+                            tempYW += 1
+                            tempMW += 1
+                            if (datetime.getMonth() === i) {
+                                tempCalendar.push([tempYW, tempMW])
+                            }
+                        }
+                    }
+                // if (i === datetime.getMonth()) {
+                //     for (let j = 0; j < new Date(datetime.getFullYear(), i + 1, 0).getDate(); j++) {
+                //         if (j === benchmarkDay) {
+
+                //         }
+                //     }
+                // } else {
+                // }
+            }
             console.log(datetime)
             
             
@@ -142,13 +152,12 @@ export default {
             // console.log(this.firstDay)
             // console.log(this.weekArrangeType)
             // console.log(this.weekNumberingType)
-            console.log(yearLength)
             console.log(benchmarkDay)
             console.log(tempCalendar)
 
         },
         testMethod() {
-            this.setIresaiCalendar(this.targetDatetime)
+            this.setResaCalendar(this.targetDatetime)
         }
 
 
