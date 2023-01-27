@@ -11,6 +11,10 @@
             </div>
         </header>
         <section>
+            <div>
+                <div>First Day</div>
+                <label v-for="option in firstDayOptions" :key="option"
+            </div>
 
         </section>
         <section>
@@ -37,8 +41,11 @@ export default {
             currentDatetime: new Date(), // 실시간 현재 시간
 
             firstDay: null, // 한 주의 시작 요일(1, 2, 3, 4, 5, 6, 0)
+            firstDayOptions: [{ text: '월', value: 1 },{ text: '일', value: 0 },{ text: '토', value: 6 }],
             weekArrangeType: null, // 전체(+0) 또는 과반수(+3)
+            weekArrangeType: [{ text: '과반수', value: +3 }, { text: '전체', value: +0 }],
             weekNumberingType: null, // mw 또는 yw
+            weekNumberingTypeOptions: ['mw', 'yw'],
 
             targetDatetime: null, // 선택 날짜, Date() 객체, 00시00분
 
