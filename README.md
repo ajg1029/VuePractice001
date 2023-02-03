@@ -1,6 +1,10 @@
 # VuePractice001
 
+## 2023-02-03
 
+달력을 그릴 때, getFullYear() 또는 getMonth() 를 사용하면 무조건 버그가 생길 수 밖에 없다는 사실을 이제야 깨달음;;
+
+benchmarkDay에서 달력 생성에 관련된 모든 로직이 시작되어야 한다...
 
 ## 2023-01-21
 
@@ -17,8 +21,6 @@ vue 연습하려고 만들었는데 어쩌다보니 calendar project가 되어�
 일 넘기기, 달 넘기기, 연 넘기기
 
 (달력에 표시된) 날짜 클릭 시 이동
-
-
 
 #### (2)
 
@@ -43,9 +45,6 @@ vue 연습하려고 만들었는데 어쩌다보니 calendar project가 되어�
 7. drawingDatetime과 benchmarkDay를 기준으로 calendar를 그리고 month와 week를 numbering 한다.
 
 8. weekNumberingType이 year인 경우, 한 해의 첫 번째 benchmarkDay를 확인하여 week를 numbering한다.
-
-
-
 * 네 가지 타입의 데이터가 있다. date memo, week memo, month memo, year memo
 
 * date memo
@@ -65,8 +64,6 @@ vue 연습하려고 만들었는데 어쩌다보니 calendar project가 되어�
 * month memo, year memo
   
   * 이 두 개도 캘린더 스타일의 영향을 받는 걸로 하자.
-
-
 
 #### (1)
 
@@ -148,8 +145,6 @@ vue 연습하려고 만들었는데 어쩌다보니 calendar project가 되어�
 
 * 서버, DB, 배포, PWA, electron 까지... 얼마나 걸릴까
 
-
-
 ## 2023-01-20
 
 * ver1에서 발견한 문제점
@@ -191,8 +186,6 @@ vue 연습하려고 만들었는데 어쩌다보니 calendar project가 되어�
     * datetimeForDisplay 를 기준으로 weeks 구성한다.
     
     * selectedDatetime이 weeks에서 벗어나면 그 때 다시 datetimeForDisplay를 업데이트 해주면 될 것이다.
-
-
 
 ## 2023-01-19
 

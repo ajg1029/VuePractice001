@@ -108,6 +108,7 @@ export default {
         },
         isDateIncluded(val) {
             if (val === false) {
+                console.log('date not included in calendar. reset RESA')
                 this.setResaCalendar(this.targetDatetime)
                 this.isDateIncluded = true
             }
@@ -157,6 +158,7 @@ export default {
             this.isDateIncluded = false
         },
         setResaCalendar(datetime) {
+            console.log(datetime)
             this.resaDays = []
             this.resaCalendar = []
 
@@ -182,7 +184,7 @@ export default {
                             // tempCalendar.push([tempYW, tempMW])
                             let tempWeek = []
                             for (let k = 0; k < 7; k++) {
-                                tempWeek.push('0000-00-00')
+                                tempWeek.push(dayjs(new Date(datetime.getFullYear(), i, j - this.weekArrangeType + k)).format('YYYY-MM-DD'))
                             }
                             tempCalendar.push(tempWeek)
                         }
