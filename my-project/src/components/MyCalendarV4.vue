@@ -42,6 +42,12 @@
                         <th v-for="(day, idx) in resaDays" :key="idx">{{ day }}요일</th>
                     </tr>
                 </thead>
+                <tbody>
+                    <tr v-for="(week, idx) in resaCalendar" :key="idx">
+                        <td></td>
+                        <td v-for="(day, idx) in week" :key="idx">{{ day }}</td>
+                    </tr>
+                </tbody>
             </table>
 
         </section>
@@ -57,22 +63,22 @@ export default {
 
             currentDatetime: new Date(), // 실시간 현재 시간
 
-            firstDay: null, // 한 주의 시작 요일(1, 2, 3, 4, 5, 6, 0)
+            firstDay: 1, // 한 주의 시작 요일(1, 2, 3, 4, 5, 6, 0)
             firstDayOptions: [{ text: '월', value: 1 },{ text: '일', value: 0 },{ text: '토', value: 6 }],
-            weekArrangeType: null, // 전체(+0) 또는 과반수(+3)
+            weekArrangeType: +3, // 전체(+0) 또는 과반수(+3)
             weekArrangeTypeOptions: [{ text: '과반수', value: +3 }, { text: '전체', value: +0 }],
-            weekNumberingType: null, // mw 또는 yw
+            weekNumberingType: 'mw', // mw 또는 yw
             weekNumberingTypeOptions: [{ text: 'Month Week', value: 'mw'}, { text: 'Year Week', value: 'yw'}],
 
             targetDatetime: null, // 선택 날짜, Date() 객체, 00시00분
 
-            resaDays: null, // 달력 상단의 요일 순서, firstDay 에 따라 결정
+            resaDays: [], // 달력 상단의 요일 순서, firstDay 에 따라 결정
             resaDate: null, // targetDatetime의 YYYY-MM-DD 포맷
             resaMWeek: null, // 월 기준의 week numbering
             resaYWeek: null, // 연 기준의 week numbering
             resaMonth: null, // targetDatetime 기준의 월이 아닌, resa 기준의 월
             resaYear: null, // 마찬가지로 resa 기준 연도
-            resaCalendar: null, // resa 달력의 각 날짜가 들어간 배열
+            resaCalendar: [], // resa 달력의 각 날짜가 들어간 배열
             isDateIncluded: null, // targetDatetime 이 바뀌었을 때 resaMonth 를 벗어나면 false
 
         }
@@ -95,15 +101,26 @@ export default {
             // iresaiYear: null, // 달력 해
             // iresaiCalendar: [], // 달력
             // this.setResaCalendar(val)
+
+
             this.checkIsDateIncluded()
+            // 선택 날짜가 바뀔 때마다, 현재 표시되는 달력에 선택날짜가 포함되었는지 검사한다.
         },
         isDateIncluded(val) {
             if (val === false) {
                 this.setResaCalendar(this.targetDatetime)
                 this.isDateIncluded = true
             }
+        },
+        firstDay() {
+            this.setResaCalendar(this.targetDatetime)
+        },
+        weekArrangeType() {
+            this.setResaCalendar(this.targetDatetime)
+        },
+        weekNumberingType() {
+            this.setResaCalendar(this.targetDatetime)
         }
-
     },
     methods: {
         updateCurrentDatetime() {
@@ -130,7 +147,14 @@ export default {
             this.targetDatetime = new Date(this.targetDatetime.getFullYear(), this.targetDatetime.getMonth(), this.targetDatetime.getDate() + 1)
         },
         checkIsDateIncluded() {
-            this.setResaCalendar(this.targetDatetime)
+            for (let i = 0; i < this.resaCalendar.length; i++) {
+                for (let j = 0; j < this.resaCalendar[i].length; j++) {
+                    if (this.resaDate === this.resaCalendar[i][j]) {
+                        return
+                    }
+                }
+            }
+            this.isDateIncluded = false
         },
         setResaCalendar(datetime) {
             this.resaDays = []
@@ -151,14 +175,19 @@ export default {
             for (let i = 0; i < 12; i++) {
                 let tempMW = 0
                 for (let j = 0; j < new Date(datetime.getFullYear(), i + 1, 0).getDate(); j++) {
-                        if (new Date(datetime.getFullYear(), i, j).getDay() === benchmarkDay) {
-                            tempYW += 1
-                            tempMW += 1
-                            if (datetime.getMonth() === i) {
-                                tempCalendar.push([tempYW, tempMW])
+                    if (new Date(datetime.getFullYear(), i, j).getDay() === benchmarkDay) {
+                        tempYW = tempYW + 1
+                        tempMW = tempMW + 1
+                        if (datetime.getMonth() === i) {
+                            // tempCalendar.push([tempYW, tempMW])
+                            let tempWeek = []
+                            for (let k = 0; k < 7; k++) {
+                                tempWeek.push('0000-00-00')
                             }
+                            tempCalendar.push(tempWeek)
                         }
                     }
+                }
                 // if (i === datetime.getMonth()) {
                 //     for (let j = 0; j < new Date(datetime.getFullYear(), i + 1, 0).getDate(); j++) {
                 //         if (j === benchmarkDay) {
@@ -168,7 +197,7 @@ export default {
                 // } else {
                 // }
             }
-            console.log(datetime)
+            // console.log(datetime)
             
             
             
@@ -176,12 +205,13 @@ export default {
             // console.log(this.firstDay)
             // console.log(this.weekArrangeType)
             // console.log(this.weekNumberingType)
-            console.log(benchmarkDay)
+            // console.log(benchmarkDay)
             console.log(tempCalendar)
+            this.resaCalendar = tempCalendar
 
         },
         testMethod() {
-            // this.setResaCalendar(this.targetDatetime)
+            this.setResaCalendar(this.targetDatetime)
         }
 
 
@@ -192,5 +222,10 @@ export default {
 </script>
 
 <style>
+
+th,td{
+    padding: 10px;
+    border: solid 1px lightblue;
+}
 
 </style>
