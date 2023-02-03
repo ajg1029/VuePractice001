@@ -13,7 +13,24 @@
         <section>
             <div>
                 <div>First Day</div>
-                <label v-for="option in firstDayOptions" :key="option"
+                <label v-for="option in firstDayOptions" :key="option.value">
+                    <input type="radio" v-model="firstDay" :value="option.value">
+                    {{ option.text }}
+                </label>
+            </div>
+            <div>
+                <div>Week Arrange Type</div>
+                <label v-for="option in weekArrangeTypeOptions" :key="option.value">
+                    <input type="radio" v-model="weekArrangeType" :value="option.value">
+                    {{ option.text }}
+                </label>
+            </div>
+            <div>
+                <div>Week Numbering Type</div>
+                <label v-for="option in weekNumberingTypeOptions" :key="option.value">
+                    <input type="radio" v-model="weekNumberingType" :value="option.value">
+                    {{ option.text }}
+                </label>
             </div>
 
         </section>
@@ -43,9 +60,9 @@ export default {
             firstDay: null, // 한 주의 시작 요일(1, 2, 3, 4, 5, 6, 0)
             firstDayOptions: [{ text: '월', value: 1 },{ text: '일', value: 0 },{ text: '토', value: 6 }],
             weekArrangeType: null, // 전체(+0) 또는 과반수(+3)
-            weekArrangeType: [{ text: '과반수', value: +3 }, { text: '전체', value: +0 }],
+            weekArrangeTypeOptions: [{ text: '과반수', value: +3 }, { text: '전체', value: +0 }],
             weekNumberingType: null, // mw 또는 yw
-            weekNumberingTypeOptions: ['mw', 'yw'],
+            weekNumberingTypeOptions: [{ text: 'Month Week', value: 'mw'}, { text: 'Year Week', value: 'yw'}],
 
             targetDatetime: null, // 선택 날짜, Date() 객체, 00시00분
 
@@ -164,7 +181,7 @@ export default {
 
         },
         testMethod() {
-            this.setResaCalendar(this.targetDatetime)
+            // this.setResaCalendar(this.targetDatetime)
         }
 
 
