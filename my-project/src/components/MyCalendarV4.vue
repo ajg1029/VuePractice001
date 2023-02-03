@@ -108,7 +108,7 @@ export default {
         },
         isDateIncluded(val) {
             if (val === false) {
-                console.log('date not included in calendar. reset RESA')
+                // console.log('date not included in calendar. reset RESA')
                 this.setResaCalendar(this.targetDatetime)
                 this.isDateIncluded = true
             }
@@ -158,7 +158,7 @@ export default {
             this.isDateIncluded = false
         },
         setResaCalendar(datetime) {
-            console.log(datetime)
+            // console.log(datetime)
             this.resaDays = []
             this.resaCalendar = []
 
@@ -170,46 +170,59 @@ export default {
                 tempDay++
             }
 
-            let tempCalendar = []
-            // year week numbering 과 month week numbering 부터 세어야 한다...
-            // target 의 month 에 도달했을 때는 month week numbering을 센다...
-            let tempYW = 0
-            for (let i = 0; i < 12; i++) {
-                let tempMW = 0
-                for (let j = 0; j < new Date(datetime.getFullYear(), i + 1, 0).getDate(); j++) {
-                    if (new Date(datetime.getFullYear(), i, j).getDay() === benchmarkDay) {
-                        tempYW = tempYW + 1
-                        tempMW = tempMW + 1
-                        if (datetime.getMonth() === i) {
-                            // tempCalendar.push([tempYW, tempMW])
-                            let tempWeek = []
-                            for (let k = 0; k < 7; k++) {
-                                tempWeek.push(dayjs(new Date(datetime.getFullYear(), i, j - this.weekArrangeType + k)).format('YYYY-MM-DD'))
-                            }
-                            tempCalendar.push(tempWeek)
-                        }
-                    }
-                }
-                // if (i === datetime.getMonth()) {
-                //     for (let j = 0; j < new Date(datetime.getFullYear(), i + 1, 0).getDate(); j++) {
-                //         if (j === benchmarkDay) {
+            // let tempBenchmark = datetime
+            // let realBenchmark = null
+            // while (tempBenchmark.getDay() !== benchmarkDay) {
+            //     console.log('today : ', tempBenchmark)
+            //     console.log('reaching benchmark...')
+            //     tempBenchmark = new Date(tempBenchmark.getFullYear(), tempBenchmark.getMonth(), tempBenchmark.getDate() - 1)
+            //     if (tempBenchmark.getDay() === benchmarkDay) {
+            //         console.log('found benchmark')
+            //         realBenchmark = new Date(tempBenchmark.getFullYear(), tempBenchmark.getMonth(), tempBenchmark.getDate() - 1)
+            //     }
+            // }
+            // console.log(realBenchmark)
 
-                //         }
-                //     }
-                // } else {
-                // }
-            }
-            // console.log(datetime)
-            
-            
-            
-            // console.log(datetime)
-            // console.log(this.firstDay)
-            // console.log(this.weekArrangeType)
-            // console.log(this.weekNumberingType)
-            // console.log(benchmarkDay)
-            console.log(tempCalendar)
-            this.resaCalendar = tempCalendar
+
+
+            // let tempCalendar = []
+            // // year week numbering 과 month week numbering 부터 세어야 한다...
+            // // target 의 month 에 도달했을 때는 month week numbering을 센다...
+            // let tempYW = 0
+            // for (let i = 0; i < 12; i++) {
+            //     let tempMW = 0
+            //     for (let j = 0; j < new Date(datetime.getFullYear(), i + 1, 0).getDate(); j++) {
+            //         if (new Date(datetime.getFullYear(), i, j).getDay() === benchmarkDay) {
+            //             tempYW = tempYW + 1
+            //             tempMW = tempMW + 1
+            //             if (datetime.getMonth() === i) {
+            //                 // tempCalendar.push([tempYW, tempMW])
+            //                 let tempWeek = []
+            //                 for (let k = 0; k < 7; k++) {
+            //                     tempWeek.push(dayjs(new Date(datetime.getFullYear(), i, j - this.weekArrangeType + k)).format('YYYY-MM-DD'))
+            //                 }
+            //                 tempCalendar.push(tempWeek)
+            //             }
+            //         }
+            //     }
+            //     // if (i === datetime.getMonth()) {
+            //     //     for (let j = 0; j < new Date(datetime.getFullYear(), i + 1, 0).getDate(); j++) {
+            //     //         if (j === benchmarkDay) {
+
+            //     //         }
+            //     //     }
+            //     // } else {
+            //     // }
+            // }
+            // // console.log(datetime)
+
+            // // console.log(datetime)
+            // // console.log(this.firstDay)
+            // // console.log(this.weekArrangeType)
+            // // console.log(this.weekNumberingType)
+            // // console.log(benchmarkDay)
+            // console.log(tempCalendar)
+            // this.resaCalendar = tempCalendar
 
         },
         testMethod() {
