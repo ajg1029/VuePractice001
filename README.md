@@ -1,5 +1,17 @@
 # VuePractice001
 
+## 2023-02-04
+
+###### '한 주의 시작 요일'과 '연 또는 월의 첫 주의 기준'을 적용한 달력 구현 완료!
+
+targetFirstDayDatetime 과 targetBenchmarkDatetime 은 setCalendar() 에서 빼고, watch 쪽으로 넣는 것이 좋을 것 같다. 그리고 달력에 표시된 날짜를 클릭했을 때 해당 날짜로 targetDatetime 이 변경되는 기능을 넣자.
+
+그 다음엔 날짜마다 컴포넌트를...
+
+
+
+
+
 ## 2023-02-03
 
 #### (2)

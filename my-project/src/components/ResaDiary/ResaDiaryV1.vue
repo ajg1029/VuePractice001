@@ -42,8 +42,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-
+                    <tr v-for="(week, idx) in resa.calendar" :key="idx">
+                        <td></td>
+                        <td v-for="(day, idx) in week" :key="idx">{{ day.date }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -94,19 +95,19 @@ export default {
 
         },
         firstDay() {
-            this.setCalendar(this.targetDatetime)
+            this.setCalendar()
         },
         weekArrangeType() {
-            this.setCalendar(this.targetDatetime)
+            this.setCalendar()
         },
         weekNumberingType() {
-            this.setCalendar(this.targetDatetime)
+            this.setCalendar()
         }
     },
     methods: {
         testMethod() {
             // console.log()
-            this.setCalendar(this.targetDatetime)
+            this.setCalendar()
         },
         updateCurrentDatetime() {
             setTimeout(() => {
@@ -131,7 +132,8 @@ export default {
 				case 0 : return '일'
 			}
         },
-        setCalendar(datetime) {
+        setCalendar() {
+            console.log('setting calendar...')
             // 달력 상단에 표시되는 요일과 달력 내부 날짜 초기화
             this.resa.days = []
             this.resa.calendar = []
@@ -144,7 +146,7 @@ export default {
             }
 
             // 선택 날짜가 포함된 주의 첫 요일 검색 및 저장
-            let tempFirstDatetime = datetime
+            let tempFirstDatetime = this.targetDatetime
             while (tempFirstDatetime.getDay() !== this.firstDay) {
                 tempFirstDatetime = new Date(tempFirstDatetime.getFullYear(), tempFirstDatetime.getMonth(), tempFirstDatetime.getDate() - 1)
                 if (tempFirstDatetime.getDay() === this.firstDay) {
@@ -153,20 +155,45 @@ export default {
             }
 
             // 선택 날짜가 포함된 주의 기준 요일 저장
+            let benchmarkDay = (this.firstDay + this.weekArrangeType) % 7
             this.targetBenchmarkDatetime = new Date(this.targetFirstDayDatetime.getFullYear(), this.targetFirstDayDatetime.getMonth(), this.targetFirstDayDatetime.getDate() + this.weekArrangeType)
 
             //
+            let tempCalendar = []
+            let tempYW = 0
+            for (let i = 0; i < 12; i++) {
+                let tempMW = 0
+                // console.log(i + 1, '월')
+                for (let j = 0; j < new Date(this.targetBenchmarkDatetime.getFullYear(), i + 1, 0).getDate(); j++) {
+                    if (new Date(this.targetBenchmarkDatetime.getFullYear(), i, j).getDay() === benchmarkDay) {
+                        tempYW = tempYW + 1
+                        tempMW = tempMW + 1
+                        // console.log('week')
+                        if (this.targetBenchmarkDatetime.getMonth() === i) {
+                            // console.log('month week')
+                            let tempWeek = []
+                            for (let k = 0; k < 7; k++) {
+                                // console.log('day')
+                                tempWeek.push({
+                                    date: dayjs(new Date(this.targetBenchmarkDatetime.getFullYear(), i, j - this.weekArrangeType + k)).format('YYYY-MM-DD'),
+                                    datetime: new Date(this.targetBenchmarkDatetime.getFullYear(), i, j - this.weekArrangeType + k)
+                                })
+                            }
+                            // console.log(tempWeek)
+                            tempCalendar.push(tempWeek)
+                        }
+                    }
+                }
+            }
+            // console.log('targetDatetime : ', this.targetDatetime)
+            // console.log('targetFirstDayDatetime : ', this.targetFirstDayDatetime)
+            // console.log('targetBenchmarkDatetime : ', this.targetBenchmarkDatetime)
+            // console.log(tempCalendar)
+            this.resa.calendar = tempCalendar
 
-
-
-
-
-
-
-            console.log('targetDatetime : ', this.targetDatetime)
-            console.log('targetFirstDayDatetime : ', this.targetFirstDayDatetime)
-            console.log('targetBenchmarkDatetime : ', this.targetBenchmarkDatetime)
-
+            // console.log(this.resa.days)
+            // console.log(this.resa.calendar)
+            console.log('done')
         }
 
     }
