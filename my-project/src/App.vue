@@ -1,6 +1,9 @@
 <template>
   <div id="app">
-    <ResaDiaryV1 />
+    <ResaDiaryV2 />
+
+    <!-- <ResaDiaryV1 /> -->
+
     <!-- <MyCalendarV4 v-if="false"/>
     <MyCalendarV3 v-if="false"/>
     <MyCalendarV2 v-if="false"/>
@@ -13,7 +16,8 @@
 // import MyCalendarV2 from './components/MyCalendar/MyCalendarV2.vue';
 // import MyCalendarV3 from './components/MyCalendar/MyCalendarV3.vue';
 // import MyCalendarV4 from './components/MyCalendar/MyCalendarV4.vue';
-import ResaDiaryV1 from './components/ResaDiary/ResaDiaryV1.vue';
+// import ResaDiaryV1 from './components/ResaDiary/ResaDiaryV1.vue';
+import ResaDiaryV2 from './components/ResaDiary/ResaDiaryV2.vue';
 
 export default {
   name: 'App',
@@ -22,7 +26,8 @@ export default {
     // MyCalendarV2,
     // MyCalendarV3,
     // MyCalendarV4,
-    ResaDiaryV1
+    // ResaDiaryV1,
+    ResaDiaryV2
 }
 }
 </script>
@@ -40,6 +45,6 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  align-items: center;
+  align-items: flex-start;
 }
 </style>
